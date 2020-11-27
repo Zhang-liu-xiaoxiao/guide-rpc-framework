@@ -115,7 +115,7 @@ fork 项目到自己的仓库，然后克隆项目到自己的本地：`git clon
 
 ### CheckStyle 插件下载和配置
 
-IntelliJ IDEA-> Preferences->Plugins->搜索下载 CheckStyle 插件，然后按照如下方式进行配置。
+`IntelliJ IDEA-> Preferences->Plugins->搜索下载 CheckStyle 插件`，然后按照如下方式进行配置。
 
 ![CheckStyle 插件下载和配置](./images/setting-check-style.png)
 
@@ -226,10 +226,10 @@ public class HelloController {
 ```
 
 ```java
-ClientTransport clientTransport = new SocketRpcClient();
+ClientTransport rpcRequestTransport = new SocketRpcClient();
 RpcServiceProperties rpcServiceProperties = RpcServiceProperties.builder()
         .group("test2").version("version2").build();
-RpcClientProxy rpcClientProxy = new RpcClientProxy(clientTransport, rpcServiceProperties);
+RpcClientProxy rpcClientProxy = new RpcClientProxy(rpcRequestTransport, rpcServiceProperties);
 HelloService helloService = rpcClientProxy.getProxy(HelloService.class);
 String hello = helloService.hello(new Hello("111", "222"));
 System.out.println(hello);

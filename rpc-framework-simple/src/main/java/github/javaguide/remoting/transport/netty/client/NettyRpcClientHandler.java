@@ -30,13 +30,13 @@ import java.net.InetSocketAddress;
  * @createTime 2020年05月25日 20:50:00
  */
 @Slf4j
-public class NettyClientHandler extends ChannelInboundHandlerAdapter {
+public class NettyRpcClientHandler extends ChannelInboundHandlerAdapter {
     private final UnprocessedRequests unprocessedRequests;
-    private final ChannelProvider channelProvider;
+    private final NettyRpcClient nettyRpcClient;
 
-    public NettyClientHandler() {
+    public NettyRpcClientHandler() {
         this.unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
-        this.channelProvider = SingletonFactory.getInstance(ChannelProvider.class);
+        this.nettyRpcClient = SingletonFactory.getInstance(NettyRpcClient.class);
     }
 
     /**
@@ -67,9 +67,9 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
             IdleState state = ((IdleStateEvent) evt).state();
             if (state == IdleState.WRITER_IDLE) {
                 log.info("write idle happen [{}]", ctx.channel().remoteAddress());
-                Channel channel = channelProvider.get((InetSocketAddress) ctx.channel().remoteAddress());
+                Channel channel = nettyRpcClient.getChannel((InetSocketAddress) ctx.channel().remoteAddress());
                 RpcMessage rpcMessage = new RpcMessage();
-                rpcMessage.setCodec(SerializationTypeEnum.KYRO.getCode());
+                rpcMessage.setCodec(SerializationTypeEnum.PROTOSTUFF.getCode());
                 rpcMessage.setCompress(CompressTypeEnum.GZIP.getCode());
                 rpcMessage.setMessageType(RpcConstants.HEARTBEAT_REQUEST_TYPE);
                 rpcMessage.setData(RpcConstants.PING);
